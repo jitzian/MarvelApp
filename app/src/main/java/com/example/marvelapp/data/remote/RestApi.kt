@@ -1,0 +1,23 @@
+package com.example.marvelapp.data.remote
+
+import com.example.marvelapp.data.remote.model.ApiCharacter
+import com.example.marvelapp.data.remote.model.ApiResponse
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
+
+interface RestApi {
+
+    @GET("/v1/public/characters")
+    suspend fun fetchCharacters(
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int
+    ): ApiResponse<ApiCharacter>
+
+    @GET("/v1/public/characters/{characterId}")
+    suspend fun fetchComics(@Path("characterId") characterId: Int): ApiResponse<ApiCharacter>
+
+    //TODO: Add EndPoint...
+    suspend fun fetchEvents()
+
+}
