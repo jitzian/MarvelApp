@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MarvelApp</string>
+    <string name="timeOutError_TEXT">There was a problem with the connectivity</string>
+    <string name="genericError_TEXT">There was a problem on our end. Please try later</string>
+    <string name="loading_dot_dot_dot_TEXT">Loading…</string>
+    <string name="thereIsNoDataAvailable_TEXT">There is not data available</string>>
 </resources>
