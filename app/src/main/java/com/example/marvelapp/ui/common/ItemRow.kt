@@ -8,14 +8,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.marvelapp.R
+import com.example.marvelapp.data.remote.model.ApiCharacter
 
 @Composable
-@Preview(showBackground = true)
-fun ItemRow() {
+fun <T> ItemRow(data: T) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +46,7 @@ fun ItemRow() {
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = "Hero Name",
+                    text = (data as ApiCharacter).name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
@@ -59,7 +58,7 @@ fun ItemRow() {
                 )
 
                 Text(
-                    text = "Hero Description",
+                    text = (data as ApiCharacter).description,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
