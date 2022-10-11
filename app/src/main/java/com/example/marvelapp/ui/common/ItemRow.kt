@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.marvelapp.R
 import com.example.marvelapp.data.remote.model.ApiCharacter
+import com.example.marvelapp.data.remote.model.asString
 
 @Composable
 fun <T> ItemRow(data: T) {
@@ -31,7 +32,7 @@ fun <T> ItemRow(data: T) {
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.dimen_8_dp))
         ) {
             Image(
-                painter = rememberImagePainter(data = "https://cdn4.iconfinder.com/data/icons/bettericons/354/github-512.png"),
+                painter = rememberImagePainter(data = (data as ApiCharacter).thumbnail.asString()),
                 contentDescription = "",
                 modifier = Modifier
                     .height(120.dp)
