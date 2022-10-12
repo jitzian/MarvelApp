@@ -1,9 +1,14 @@
 package com.example.marvelapp.data.di.modules
 
 import com.example.marvelapp.constants.GlobalConstants
+import com.example.marvelapp.constants.GlobalConstants.Companion.MARVEL_PRIVATE_KEY
+import com.example.marvelapp.constants.GlobalConstants.Companion.MARVEL_PUBLIC_KEY
+import com.example.marvelapp.data.remote.RestApi
 import com.example.marvelapp.utils.generateHash
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -14,24 +19,23 @@ import java.util.*
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class) // Scope of the injected component
 class NetworkModule {
 
     @Provides
-    @Singleton
-    fun providesRetrofit() {
+    @Singleton // Scope of the instance
+    fun providesRetrofit(): RestApi {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(QueryInterceptor())
-            .build()
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor)
+            .addInterceptor(QueryInterceptor()).build()
 
-        Retrofit.Builder()
-            .baseUrl(GlobalConstants.BASE_URL)
+        return Retrofit.Builder().baseUrl(GlobalConstants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
+            .create(RestApi::class.java)
     }
 }
 
@@ -41,19 +45,13 @@ private class QueryInterceptor : Interceptor {
         val originalUrl = original.url
 
         val ts = Date().time
-        //val hash = generateHash(ts, BuildConfig.MARVEL_PRIVATE_KEY, BuildConfig.MARVEL_PUBLIC_KEY)
+        val hash = generateHash(ts, MARVEL_PRIVATE_KEY, MARVEL_PUBLIC_KEY)
 
         val url = originalUrl.newBuilder()
-            //.addQueryParameter("apikey", BuildConfig.MARVEL_PUBLIC_KEY)
-            //.addQueryParameter("MARVEL_PUBLIC_KEY", System.getenv("MARVEL_PUBLIC_KEY"))
-            .addQueryParameter("apikey", "28a0bd1762195c2c87c2733f32b39076")
-            .addQueryParameter("ts", ts.toString())
-            .addQueryParameter("hash", hash)
-            .build()
+            .addQueryParameter("apikey", MARVEL_PUBLIC_KEY)
+            .addQueryParameter("ts", ts.toString()).addQueryParameter("hash", hash).build()
 
-        val request = original.newBuilder()
-            .url(url)
-            .build()
+        val request = original.newBuilder().url(url).build()
 
         return chain.proceed(request)
     }
