@@ -1,12 +1,16 @@
 package com.example.marvelapp.ui.common
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
@@ -27,49 +31,44 @@ fun <T> ItemRow(data: T) {
             ),
         elevation = dimensionResource(id = R.dimen.dimen_4_dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.dimen_8_dp))
+            verticalArrangement = Arrangement.spacedBy(
+                dimensionResource(id = R.dimen.dimen_8_dp)
+            )
         ) {
             Image(
                 painter = rememberImagePainter(data = (data as ApiCharacter).thumbnail.asString()),
-                contentDescription = "",
+                contentDescription = (data as ApiCharacter).name,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(120.dp)
-                    .width(120.dp)
                     .padding(
-                        start = dimensionResource(id = R.dimen.dimen_8_dp),
-                        top = dimensionResource(id = R.dimen.dimen_8_dp),
-                        bottom = dimensionResource(id = R.dimen.dimen_8_dp)
+                        all = dimensionResource(id = R.dimen.dimen_8_dp)
                     )
+                    .fillMaxWidth()
+                    .background(Color.LightGray)
+                    .aspectRatio(1f)
             )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = (data as ApiCharacter).name,
+                    style = MaterialTheme.typography.body2,
+                    maxLines = 1,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = dimensionResource(id = R.dimen.dimen_8_dp),
-                            top = dimensionResource(id = R.dimen.dimen_8_dp),
-                            end = dimensionResource(id = R.dimen.dimen_8_dp)
-                        ),
-                    style = MaterialTheme.typography.body1
+                        .padding(8.dp, 16.dp)
+                        .weight(1f)
                 )
-
-                Text(
-                    text = (data as ApiCharacter).description,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = dimensionResource(id = R.dimen.dimen_8_dp),
-                            top = dimensionResource(id = R.dimen.dimen_8_dp),
-                            end = dimensionResource(id = R.dimen.dimen_8_dp),
-                            bottom = dimensionResource(id = R.dimen.dimen_8_dp)
-                        ),
-                    style = MaterialTheme.typography.caption
-                )
+                IconButton(
+                    onClick = { /*TODO*/ }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = ""
+                    )
+                }
             }
         }
     }
