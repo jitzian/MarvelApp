@@ -35,7 +35,7 @@ class CharactersViewModel @Inject constructor(
                     if (state.value == UIState.Loading) {
                         //TODO: Move offset and limit params to constants..
                         result = charactersRepository.fetchCharacters(0, 100)
-                        Log.e(this.TAG(), "fetchCharacters: -->>  ${result.data.results.size}")
+                        Log.e(this@CharactersViewModel.TAG(), "fetchCharacters: -->>  ${result.data.results.size}")
                         if (result.data.results.isEmpty()) {
                             _state.value = UIState.Error(
                                 message = appContext.getString(R.string.thereIsNoDataAvailable_TEXT)

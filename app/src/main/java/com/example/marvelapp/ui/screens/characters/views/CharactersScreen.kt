@@ -10,12 +10,16 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.marvelapp.R
 import com.example.marvelapp.ui.app.MarvelAppScreen
 import com.example.marvelapp.ui.common.ErrorScreen
 import com.example.marvelapp.ui.common.ItemRow
 import com.example.marvelapp.ui.common.LoadingScreen
+import com.example.marvelapp.ui.common.MainTopBar
 import com.example.marvelapp.ui.screens.characters.viewmodel.CharactersViewModel
 
 @ExperimentalFoundationApi
@@ -42,7 +46,11 @@ fun CharactersScreenState(charactersViewModel: CharactersViewModel = viewModel()
 fun <T> CharactersScreen(data: List<T>) {
     val state = rememberLazyListState()
     MarvelAppScreen {
-        Scaffold {
+        Scaffold(
+            topBar = {
+                MainTopBar(barTitle = stringResource(id = R.string.marvel_characters_TEXT))
+            }
+        ) {
             LazyVerticalGrid(
                 state = state,
                 cells = GridCells.Adaptive(180.dp),
