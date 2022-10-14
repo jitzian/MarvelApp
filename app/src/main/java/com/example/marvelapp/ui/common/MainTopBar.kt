@@ -5,21 +5,23 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 
 @Composable
-fun MainTopBar(showBackButton: Boolean = false) {
-    if (showBackButton) {
+fun MainTopBar(
+    showBackButton: Boolean = false,
+    barTitle: String? = null,
+    onBackClick: (() -> Unit)? = null
+) {
+    if (showBackButton && onBackClick != null) {
         TopAppBar(
             title = {
-                Text(text = "This is the title")
+                Text(text = barTitle?.takeIf { it.isNotEmpty() } ?: "")
             },
             navigationIcon = {
-                ArrowBackIcon {
-                    //TODO: To be implemented (action listener button)
-                }
+                ArrowBackIcon(onBackClick = onBackClick)
             }
         )
     } else {
         TopAppBar(
-            title = { Text(text = "This is the title") }
+            title = { Text(text = barTitle?.takeIf { it.isNotEmpty() } ?: "") }
         )
     }
 }
