@@ -1,7 +1,9 @@
 package com.example.marvelapp.ui.common
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -19,7 +21,7 @@ import com.example.marvelapp.data.remote.model.ApiCharacter
 import com.example.marvelapp.data.remote.model.asString
 
 @Composable
-fun <T> ItemRow(data: T) {
+fun <T> ItemRow(data: T, onItemClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,7 +30,10 @@ fun <T> ItemRow(data: T) {
                 vertical = dimensionResource(
                     id = R.dimen.dimen_8_dp
                 )
-            ),
+            )
+            .clickable {
+                onItemClick.invoke()
+            },
         elevation = dimensionResource(id = R.dimen.dimen_4_dp)
     ) {
         Column(
@@ -62,7 +67,10 @@ fun <T> ItemRow(data: T) {
                         .weight(1f)
                 )
                 IconButton(
-                    onClick = { /*TODO*/ }
+                    onClick = {
+                        /*TODO*/
+                        Log.e("ItemRow", "ItemRow: -- show details..!!")
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,

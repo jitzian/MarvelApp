@@ -10,21 +10,25 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.marvelapp.R
 import com.example.marvelapp.ui.app.MarvelAppScreen
 import com.example.marvelapp.ui.common.ErrorScreen
 import com.example.marvelapp.ui.common.ItemRow
 import com.example.marvelapp.ui.common.LoadingScreen
 import com.example.marvelapp.ui.common.MainTopBar
+import com.example.marvelapp.ui.navigation.Screens
 import com.example.marvelapp.ui.screens.characters.viewmodel.CharactersViewModel
 
 @ExperimentalFoundationApi
 @Composable
-fun CharactersScreenState(charactersViewModel: CharactersViewModel = viewModel()) {
+fun CharactersScreenState(
+    navController: NavController,
+    charactersViewModel: CharactersViewModel = hiltViewModel()
+) {
     val state by charactersViewModel.state.collectAsState()
     charactersViewModel.fetchCharacters()
 
@@ -33,7 +37,7 @@ fun CharactersScreenState(charactersViewModel: CharactersViewModel = viewModel()
             LoadingScreen()
         }
         is CharactersViewModel.UIState.Success<*> -> {
-            CharactersScreen((state as CharactersViewModel.UIState.Success<*>).data)
+            CharactersScreen(navController, (state as CharactersViewModel.UIState.Success<*>).data)
         }
         is CharactersViewModel.UIState.Error -> {
             ErrorScreen(message = (state as CharactersViewModel.UIState.Error).message)
@@ -43,12 +47,14 @@ fun CharactersScreenState(charactersViewModel: CharactersViewModel = viewModel()
 
 @ExperimentalFoundationApi
 @Composable
-fun <T> CharactersScreen(data: List<T>) {
+fun <T> CharactersScreen(navController: NavController, data: List<T>) {
     val state = rememberLazyListState()
     MarvelAppScreen {
         Scaffold(
             topBar = {
-                MainTopBar(barTitle = stringResource(id = R.string.marvel_characters_TEXT))
+                MainTopBar(
+                    barTitle = stringResource(id = R.string.marvel_characters_TEXT),
+                    onBackClick = { navController.popBackStack() })
             }
         ) {
             LazyVerticalGrid(
@@ -57,7 +63,10 @@ fun <T> CharactersScreen(data: List<T>) {
                 contentPadding = PaddingValues(4.dp)
             ) {
                 items(data) { item ->
-                    ItemRow(data = item)
+                    ItemRow(
+                        data = item,
+                        onItemClick = { navController.navigate(Screens.ComicsScreen.route) }
+                    )
                 }
             }
         }
