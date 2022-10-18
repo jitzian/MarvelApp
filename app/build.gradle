@@ -127,3 +127,8 @@ dependencies {
 dependencies {
     implementation "androidx.navigation:navigation-compose:2.4.2"
 }
+
+//Icons
+dependencies {
+    implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
+}
