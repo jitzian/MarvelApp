@@ -1,6 +1,7 @@
 package com.example.marvelapp.data.remote
 
 import com.example.marvelapp.data.remote.model.ApiCharacter
+import com.example.marvelapp.data.remote.model.ApiComic
 import com.example.marvelapp.data.remote.model.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -15,7 +16,7 @@ interface RestApi {
     ): ApiResponse<ApiCharacter>
 
     @GET("/v1/public/characters/{characterId}")
-    suspend fun fetchComics(@Path("characterId") characterId: Int): ApiResponse<ApiCharacter>
+    suspend fun fetchComics(@Path("characterId") characterId: Int): ApiResponse<ApiComic>
 
     //TODO: Add EndPoint...
     suspend fun fetchEvents()
