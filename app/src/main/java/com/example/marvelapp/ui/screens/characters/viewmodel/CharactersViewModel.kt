@@ -35,7 +35,10 @@ class CharactersViewModel @Inject constructor(
                     if (state.value == UIState.Loading) {
                         //TODO: Move offset and limit params to constants..
                         result = charactersRepository.fetchCharacters(0, 100)
-                        Log.e(this@CharactersViewModel.TAG(), "fetchCharacters: -->>  ${result.data.results.size}")
+                        Log.e(
+                            this@CharactersViewModel.TAG(),
+                            "fetchCharacters: -->>  ${result.data.results.size}"
+                        )
                         if (result.data.results.isEmpty()) {
                             _state.value = UIState.Error(
                                 message = appContext.getString(R.string.thereIsNoDataAvailable_TEXT)
@@ -47,12 +50,12 @@ class CharactersViewModel @Inject constructor(
                 }
             }
         } catch (tce: TimeoutCancellationException) {
-            Log.e(this.TAG(), "fetchCharacters: ${tce.message}")
+            Log.e(this@CharactersViewModel.TAG(), "fetchCharacters: ${tce.message}")
             _state.value = UIState.Error(
                 message = tce.message ?: appContext.getString(R.string.timeOutError_TEXT)
             )
         } catch (e: Exception) {
-            Log.e(this.TAG(), "fetchCharacters: ${e.message}")
+            Log.e(this@CharactersViewModel.TAG(), "fetchCharacters: ${e.message}")
             _state.value = UIState.Error(
                 message = e.message ?: appContext.getString(R.string.genericError_TEXT)
             )
