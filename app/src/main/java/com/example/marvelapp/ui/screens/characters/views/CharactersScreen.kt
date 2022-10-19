@@ -13,20 +13,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.marvelapp.R
+import com.example.marvelapp.data.remote.model.ApiCharacter
 import com.example.marvelapp.ui.app.MarvelAppScreen
 import com.example.marvelapp.ui.common.ErrorScreen
 import com.example.marvelapp.ui.common.ItemRow
 import com.example.marvelapp.ui.common.LoadingScreen
 import com.example.marvelapp.ui.common.MainTopBar
-import com.example.marvelapp.ui.navigation.Screens
 import com.example.marvelapp.ui.screens.characters.viewmodel.CharactersViewModel
 
 @ExperimentalFoundationApi
 @Composable
 fun CharactersScreenState(
-    navController: NavController,
+    onBackButton: () -> Unit,
+    navigateToComics: (Int) -> Unit,
     charactersViewModel: CharactersViewModel = hiltViewModel()
 ) {
     val state by charactersViewModel.state.collectAsState()
@@ -37,7 +37,11 @@ fun CharactersScreenState(
             LoadingScreen()
         }
         is CharactersViewModel.UIState.Success<*> -> {
-            CharactersScreen(navController, (state as CharactersViewModel.UIState.Success<*>).data)
+            CharactersScreen(
+                onBackButton = onBackButton,
+                navigateToComics = navigateToComics,
+                data = (state as CharactersViewModel.UIState.Success<*>).data
+            )
         }
         is CharactersViewModel.UIState.Error -> {
             ErrorScreen(message = (state as CharactersViewModel.UIState.Error).message)
@@ -47,14 +51,19 @@ fun CharactersScreenState(
 
 @ExperimentalFoundationApi
 @Composable
-fun <T> CharactersScreen(navController: NavController, data: List<T>) {
+fun <T> CharactersScreen(
+    onBackButton: () -> Unit,
+    navigateToComics: (Int) -> Unit,
+    data: List<T>
+) {
     val state = rememberLazyListState()
     MarvelAppScreen {
         Scaffold(
             topBar = {
                 MainTopBar(
                     barTitle = stringResource(id = R.string.marvel_characters_TEXT),
-                    onBackClick = { navController.popBackStack() })
+                    onBackClick = onBackButton
+                )
             }
         ) {
             LazyVerticalGrid(
@@ -65,7 +74,9 @@ fun <T> CharactersScreen(navController: NavController, data: List<T>) {
                 items(data) { item ->
                     ItemRow(
                         data = item,
-                        onItemClick = { navController.navigate(Screens.ComicsScreen.route) }
+                        onItemClick = {
+                            navigateToComics((item as ApiCharacter).id)
+                        }
                     )
                 }
             }
