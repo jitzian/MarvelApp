@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.marvelapp.R
 import com.example.marvelapp.data.remote.model.ApiComic
 import com.example.marvelapp.ui.app.MarvelAppScreen
@@ -80,7 +79,7 @@ fun <T> ComicsScreen(
                     )
                     LazyColumn(state = state) {
                         items(data) { item ->
-                            ComicRow(title = (item as ApiComic).title)
+                            ComicRow(title = (item as ApiComic).title ?: "NO TITLE")
                         }
                     }
                 }

@@ -6,16 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvelapp.R
 import com.example.marvelapp.constants.GlobalConstants
+import com.example.marvelapp.data.remote.model.ApiComic
+import com.example.marvelapp.data.remote.model.ApiResponse
 import com.example.marvelapp.domain.repository.comics.ComicsRepository
 import com.example.marvelapp.utils.TAG
-import kotlinx.coroutines.TimeoutCancellationException
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
+@HiltViewModel
 class ComicsViewModel @Inject constructor(
     private val comicsRepository: ComicsRepository,
     private val appContext: Application
@@ -28,13 +30,17 @@ class ComicsViewModel @Inject constructor(
     fun fetchComics(characterId: Int) = viewModelScope.launch {
         try {
             withTimeout(GlobalConstants.TIME_OUT) {
-                if (_state.value == UIState.Loading) {
-                    val result = comicsRepository.fetchComics(characterId)
-                    if (result.data.results.isEmpty()) {
-                        _state.value =
-                            UIState.Error(message = appContext.getString(R.string.thereIsNoDataAvailable_TEXT))
-                    } else {
-                        UIState.Success(data = result.data.results)
+                withContext(Dispatchers.IO) {
+                    val result: ApiResponse<ApiComic>
+                    if (_state.value == UIState.Loading) {
+                        result = comicsRepository.fetchComics(characterId)
+                        if (result.data.results.isEmpty()) {
+                            _state.value = UIState.Error(
+                                message = appContext.getString(R.string.thereIsNoDataAvailable_TEXT)
+                            )
+                        } else {
+                            _state.value = UIState.Success(data = result.data.results)
+                        }
                     }
                 }
             }
