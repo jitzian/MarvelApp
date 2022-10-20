@@ -10,6 +10,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -68,8 +69,8 @@ fun <T> CharactersScreen(
         ) {
             LazyVerticalGrid(
                 state = state,
-                cells = GridCells.Adaptive(180.dp),
-                contentPadding = PaddingValues(4.dp)
+                cells = GridCells.Adaptive(dimensionResource(id = R.dimen.dimen_180_dp)),
+                contentPadding = PaddingValues(dimensionResource(id = R.dimen.dimen_4_dp))
             ) {
                 items(data) { item ->
                     ItemRow(
