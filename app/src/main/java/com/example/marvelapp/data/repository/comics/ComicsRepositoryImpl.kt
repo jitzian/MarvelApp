@@ -10,7 +10,19 @@ import javax.inject.Inject
 class ComicsRepositoryImpl @Inject constructor(
     private val restApi: RestApi
 ) : ComicsRepository {
+    override suspend fun fetchCharacters(offset: Int, limit: Int): ApiResponse<ApiCharacter> {
+        return restApi.fetchCharacters(offset, limit)
+    }
+
     override suspend fun fetchComics(characterId: Int): ApiResponse<ApiComic> {
         return restApi.fetchComics(characterId)
+    }
+
+    override suspend fun getComics(
+        offset: Int,
+        limit: Int,
+        format: String?
+    ): ApiResponse<ApiComic> {
+        return restApi.getComics(offset, limit, format)
     }
 }
