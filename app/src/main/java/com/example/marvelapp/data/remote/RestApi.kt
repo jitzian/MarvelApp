@@ -18,6 +18,18 @@ interface RestApi {
     @GET("/v1/public/characters/{characterId}")
     suspend fun fetchComics(@Path("characterId") characterId: Int): ApiResponse<ApiComic>
 
+    @GET("/v1/public/comics")
+    suspend fun getComics(
+        @Query("offset") offset: Int,
+        @Query("limit") limit: Int,
+        @Query("format") format: String?
+    ): ApiResponse<ApiComic>
+
+    @GET("/v1/public/comics/{comicId}")
+    suspend fun findComic(
+        @Path("comicId") comicId: Int,
+    ): ApiResponse<ApiComic>
+
     //TODO: Add EndPoint...
     suspend fun fetchEvents()
 
