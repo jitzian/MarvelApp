@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marvelapp.R
 import com.example.marvelapp.constants.GlobalConstants
-import com.example.marvelapp.data.remote.model.ApiComic
+import com.example.marvelapp.data.remote.model.ApiCharacter
 import com.example.marvelapp.data.remote.model.ApiResponse
 import com.example.marvelapp.domain.repository.comics.ComicsRepository
 import com.example.marvelapp.utils.TAG
@@ -31,15 +31,23 @@ class ComicsViewModel @Inject constructor(
         try {
             withTimeout(GlobalConstants.TIME_OUT) {
                 withContext(Dispatchers.IO) {
-                    val result: ApiResponse<ApiComic>
+                    val characters: ApiResponse<ApiCharacter>
                     if (_state.value == UIState.Loading) {
-                        result = comicsRepository.fetchComics(characterId)
-                        if (result.data.results.isEmpty()) {
+                        characters = comicsRepository.fetchCharacters(0, 100)
+                        if (characters.data.results.isEmpty()) {
                             _state.value = UIState.Error(
                                 message = appContext.getString(R.string.thereIsNoDataAvailable_TEXT)
                             )
                         } else {
-                            _state.value = UIState.Success(data = result.data.results)
+                            val data = characters.data.results.filter {
+                                it.id == characterId
+                            }.first {
+                                it.comics.items != null
+                            }.comics.items
+
+                            _state.value = UIState.Success(
+                                data = data as List<*>
+                            )
                         }
                     }
                 }
