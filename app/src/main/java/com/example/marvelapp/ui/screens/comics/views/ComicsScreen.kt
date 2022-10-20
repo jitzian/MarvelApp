@@ -77,10 +77,14 @@ fun <T> ComicsScreen(
                         text = stringResource(id = R.string.comics_TEXT),
                         style = MaterialTheme.typography.body1
                     )
-                    LazyColumn(state = state) {
-                        items(data) { item ->
-                            ComicRow(title = (item as ApiReference).name)
+                    if (data.isNotEmpty()) {
+                        LazyColumn(state = state) {
+                            items(data) { item ->
+                                ComicRow(title = (item as ApiReference).name)
+                            }
                         }
+                    } else {
+                        ComicRow(title = stringResource(id = R.string.no_data_available_TEXT))
                     }
                 }
             }
