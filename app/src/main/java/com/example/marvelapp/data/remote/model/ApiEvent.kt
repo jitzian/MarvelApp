@@ -1,5 +1,9 @@
 package com.example.marvelapp.data.remote.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ApiEvent(
     val id: Int,
     val title: String,
@@ -16,4 +20,4 @@ data class ApiEvent(
     val next: ApiReference,
     val modified: String,
     val resourceURI: String
-)
+):Parcelable

@@ -1,5 +1,9 @@
 package com.example.marvelapp.data.remote.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ApiResponse<T>(
     val attributionHTML: String,
     val attributionText: String,
@@ -8,4 +12,4 @@ data class ApiResponse<T>(
     val data: ApiData<T>,
     val etag: String,
     val status: String
-)
+) : Parcelable
