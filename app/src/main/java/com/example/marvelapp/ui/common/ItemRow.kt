@@ -1,6 +1,5 @@
 package com.example.marvelapp.ui.common
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +20,7 @@ import com.example.marvelapp.data.remote.model.ApiCharacter
 import com.example.marvelapp.data.remote.model.asString
 
 @Composable
-fun <T> ItemRow(data: T, onItemClick: () -> Unit) {
+fun <T> ItemRow(data: T, onItemClick: () -> Unit, onMoreItemClick: (T) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,13 +67,12 @@ fun <T> ItemRow(data: T, onItemClick: () -> Unit) {
                 )
                 IconButton(
                     onClick = {
-                        /*TODO*/
-                        Log.e("ItemRow", "ItemRow: -- show details..!!")
+                        onMoreItemClick(data)
                     }
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = ""
+                        contentDescription = "",
                     )
                 }
             }
