@@ -1,6 +1,7 @@
 package com.example.marvelapp.ui.navigation
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -11,6 +12,7 @@ import androidx.navigation.navArgument
 import com.example.marvelapp.ui.screens.characters.views.CharactersScreenState
 import com.example.marvelapp.ui.screens.comics.views.ComicsScreenState
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -23,6 +25,7 @@ fun NavGraph(navController: NavHostController) {
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 private fun addCharactersScreen(
     navController: NavHostController,
