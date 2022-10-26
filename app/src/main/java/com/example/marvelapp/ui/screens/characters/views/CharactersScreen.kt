@@ -3,13 +3,23 @@ package com.example.marvelapp.ui.screens.characters.views
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -79,37 +89,74 @@ fun <T> CharactersScreen(
                 )
             }
         ) {
+            Box(modifier = Modifier.fillMaxSize()) {
 
-            var bottomSheetItem by remember {
-                mutableStateOf<T?>(null)
-            }
+                var bottomSheetItem by remember {
+                    mutableStateOf<T?>(null)
+                }
 
-            ModalBottomSheetLayout(
-                sheetContent = {
-                    CharacterSummaryScreen(bottomSheetItem)
-                },
-                sheetState = sheetState
-            ) {
-                LazyVerticalGrid(
-                    state = state,
-                    cells = GridCells.Adaptive(dimensionResource(id = R.dimen.dimen_180_dp)),
-                    contentPadding = PaddingValues(dimensionResource(id = R.dimen.dimen_4_dp))
+                ModalBottomSheetLayout(
+                    sheetContent = {
+                        CharacterSummaryScreen(bottomSheetItem)
+                    },
+                    sheetState = sheetState
                 ) {
-                    items(data) { item ->
-                        ItemRow(
-                            data = item,
-                            onItemClick = {
-                                navigateToComics((item as ApiCharacter).id)
-                            },
-                            onMoreItemClick = {
-                                coroutineScope.launch {
-                                    bottomSheetItem = it
-                                    sheetState.show()
+                    LazyVerticalGrid(
+                        state = state,
+                        cells = GridCells.Adaptive(dimensionResource(id = R.dimen.dimen_180_dp)),
+                        contentPadding = PaddingValues(dimensionResource(id = R.dimen.dimen_4_dp))
+                    ) {
+                        items(data) { item ->
+                            ItemRow(
+                                data = item,
+                                onItemClick = {
+                                    navigateToComics((item as ApiCharacter).id)
+                                },
+                                onMoreItemClick = {
+                                    coroutineScope.launch {
+                                        bottomSheetItem = it
+                                        sheetState.show()
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
+
+                /**
+                 * Floating action button reference
+                 * https://www.android--code.com/2021/04/jetpack-compose-lazycolumn-scroll-to.html
+                 * */
+                val isTopButtonVisible = remember {
+                    derivedStateOf {
+                        state.firstVisibleItemIndex > 0
+                    }
+                }
+
+                FloatingActionButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            if (isTopButtonVisible.value) {
+                                state.animateScrollToItem(0)
+                            } else {
+                                state.animateScrollToItem((data as List<*>).size)
+                                state.animateScrollToItem((data as List<*>).size)
+                            }
+                        }
+                    },
+                    shape = RoundedCornerShape(50),
+                    backgroundColor = Color(0xFFFF55A3),
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(dimensionResource(id = R.dimen.dimen_16_dp))
+                ) {
+                    if (isTopButtonVisible.value) {
+                        Icon(Icons.Filled.ArrowUpward, "")
+                    } else {
+                        Icon(Icons.Filled.ArrowDownward, "")
+                    }
+                }
+
             }
         }
     }
